@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: PLAY-POWER-LAB
+    env: docker
+    dockerfile: Dockerfile
+    buildCommand: ''
+    startCommand: 'node index.js'
+    routes:
+      - type: rewrite
+        source: /api/(.*)
+        destination: /api/$1

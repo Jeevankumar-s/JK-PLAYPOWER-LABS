@@ -8,7 +8,7 @@ const app = express();
 
 (async () => {
   try {
-    const redisClientId = createClient({
+    const redisClient = createClient({
       password: process.env.REDIS_PASSWORD,
       socket: {
         host: process.env.REDIS_HOST,
@@ -18,16 +18,16 @@ const app = express();
 
     // console.log(redisClientId)
 
-    redisClientId.on('error', (err) => {
+    redisClient.on('error', (err) => {
     });
 
-    await redisClientId.connect();
+    await redisClient.connect();
 
     app.use((req, res, next) => {
-      if (!redisClientId.isOpen) {
+      if (!redisClient.isOpen) {
         return res.status(500).send('Redis is not connected');
       }
-      req.redisClientId = redisClientId;
+      req.redisClient = redisClient;
       next();
     });
 

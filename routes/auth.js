@@ -23,7 +23,7 @@ const rateLimitMiddleware = async (req, res, next) => {
     const lockout = await req.redisClient.get(lockoutKey);
 
     if (lockout) {
-      return res.status(429).json({ message: 'Account temporarily locked due to multiple failed login attempts. Try again later.' });
+      return res.status(429).json({ message: 'Account temporarily locked. Try again later.' });
     }
 
     const attempts = await req.redisClient.get(loginAttemptsKey);
@@ -32,8 +32,6 @@ const rateLimitMiddleware = async (req, res, next) => {
       await req.redisClient.set(lockoutKey, 300, 'locked'); 
       return res.status(429).json({ message: 'Too many login attempts. Please try again in 5 minutes.' });
     }
-    
-
 
     req.loginAttemptsKey = loginAttemptsKey;
     next();
